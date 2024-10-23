@@ -4,6 +4,7 @@ export { Title } from '@/components/shared/title';
 export { Categories } from '@/components/shared/categories';
 export { Sort } from '@/components/shared/sort';
 export { TopBar } from '@/components/shared/top-bar';
+export { Filters } from '@/components/shared/filters';
 export { FilterCheckbox } from '@/components/shared/filter-checkbox';
 export { FilterCheckboxGroup } from '@/components/shared/filter-checkbox-group';
 export { RangeSlider } from '@/components/shared/range-slider';
