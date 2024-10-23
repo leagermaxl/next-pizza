@@ -8,3 +8,4 @@ export { Filters } from '@/components/shared/filters';
 export { FilterCheckbox } from '@/components/shared/filter-checkbox';
 export { FilterCheckboxGroup } from '@/components/shared/filter-checkbox-group';
 export { RangeSlider } from '@/components/shared/range-slider';
+export { ProductCard } from '@/components/shared/product-card';
