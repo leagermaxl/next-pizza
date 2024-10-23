@@ -1,5 +1,6 @@
 'use client';
 import { cn } from '@/lib/utils';
+import { useCategoryStore } from '@/store/category';
 import React from 'react';
 
 interface Props {
@@ -16,9 +17,9 @@ const categories = [
   { id: 7, name: 'Десерты' },
 ];
 
-const categoryActiveId = 1;
-
 export const Categories: React.FC<Props> = ({ className }) => {
+  const categoryActiveId = useCategoryStore((state) => state.activeId);
+
   return (
     <div className={cn('inline-flex gap-1 bg-gray-50 p-1 rounded-2xl', className)}>
       {categories.map(({ id, name }, index) => (
