@@ -1,0 +1,12 @@
+export { Categories } from '@/components/shared/categories';
+export { Container } from '@/components/shared/container';
+export { FilterCheckbox } from '@/components/shared/filter-checkbox';
+export { FilterCheckboxGroup } from '@/components/shared/filter-checkbox-group';
+export { Filters } from '@/components/shared/filters';
+export { Header } from '@/components/shared/header';
+export { ProductCard } from '@/components/shared/product-card';
+export { ProductsGroupList } from '@/components/shared/products-group-list';
+export { RangeSlider } from '@/components/shared/range-slider';
+export { Sort } from '@/components/shared/sort';
+export { Title } from '@/components/shared/title';
+export { TopBar } from '@/components/shared/top-bar';
