@@ -1,9 +1,10 @@
 'use client';
-import { cn } from '@/lib/utils';
 import React from 'react';
-import { FilterCheckbox } from '.';
-import { Input } from '../ui';
-import { FilterCheckboxProps } from './filter-checkbox';
+
+import { FilterCheckbox } from '@/components/shared';
+import { FilterCheckboxProps } from '@/components/shared/filter-checkbox';
+import { Input, Skeleton } from '@/components/ui';
+import { cn } from '@/lib/utils';
 
 type Item = FilterCheckboxProps;
 
@@ -16,6 +17,7 @@ interface Props {
   onChange?: (values: string) => void;
   defaultValue?: string[];
   className?: string;
+  loading?: boolean;
 }
 
 export const FilterCheckboxGroup: React.FC<Props> = ({
@@ -27,6 +29,7 @@ export const FilterCheckboxGroup: React.FC<Props> = ({
   // onChange,
   // defaultValue,
   className,
+  loading,
 }) => {
   const [showAll, setShowAll] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
@@ -40,6 +43,18 @@ export const FilterCheckboxGroup: React.FC<Props> = ({
   const onCheckedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
+
+  if (loading) {
+    return (
+      <div className={cn('', className)}>
+        <p className='font-bold text-sm my-4'>{title}</p>
+        {[...Array(limit)].map((_, index) => (
+          <Skeleton key={index} className='mb-4 h-6 w-full bg-gray-100' />
+        ))}
+        <Skeleton className='mb-4 h-6 w-28 bg-gray-100' />
+      </div>
+    );
+  }
 
   return (
     <div className={cn('', className)}>
