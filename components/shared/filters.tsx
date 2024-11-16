@@ -1,72 +1,23 @@
-import { cn } from '@/lib/utils';
+'use client';
 import React from 'react';
-import { FilterCheckbox, FilterCheckboxGroup, RangeSlider, Title } from '.';
-import { Input } from '../ui';
+
+import { FilterCheckbox, FilterCheckboxGroup, RangeSlider, Title } from '@/components/shared';
+import { Input } from '@/components/ui';
+import { useFilterIngredients } from '@/hooks/useFilterIngredients';
+import { cn } from '@/lib/utils';
 
 interface Props {
   className?: string;
 }
 
-const ingredients = [
-  {
-    text: 'Сырный соус',
-    value: '1',
-  },
-  {
-    text: 'Моцарелла',
-    value: '2',
-  },
-  {
-    text: 'Чеснок',
-    value: '3',
-  },
-  {
-    text: 'Соленные огурчики',
-    value: '4',
-  },
-  {
-    text: 'Красный лук',
-    value: '5',
-  },
-  {
-    text: 'Томаты',
-    value: '6',
-  },
-  {
-    text: 'Ананас',
-    value: '7',
-  },
-  {
-    text: 'Сырный соус',
-    value: '1',
-  },
-  {
-    text: 'Моцарелла',
-    value: '2',
-  },
-  {
-    text: 'Чеснок',
-    value: '3',
-  },
-  {
-    text: 'Соленные огурчики',
-    value: '4',
-  },
-  {
-    text: 'Красный лук',
-    value: '5',
-  },
-  {
-    text: 'Томаты',
-    value: '6',
-  },
-  {
-    text: 'Ананас',
-    value: '7',
-  },
-];
-
 export const Filters: React.FC<Props> = ({ className }) => {
+  const { ingredients, loading } = useFilterIngredients();
+
+  const items = ingredients.map((ingredient) => ({
+    text: ingredient.name,
+    value: String(ingredient.id),
+  }));
+
   return (
     <div className={cn(className)}>
       <Title text='Фильтрация' size='sm' className='font-bold mb-5' />
@@ -87,11 +38,12 @@ export const Filters: React.FC<Props> = ({ className }) => {
 
       <div>
         <FilterCheckboxGroup
-          items={ingredients}
-          defaultItems={ingredients}
-          title={'Ингридиенты:'}
+          items={items}
+          defaultItems={items.slice(0, 6)}
+          title={'Ингредиенты:'}
           limit={6}
           searchItemPlaceholder={'Поиск...'}
+          loading={loading}
         />
       </div>
     </div>
