@@ -1,5 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import QueryString from 'qs';
 import React from 'react';
 import { useSet } from 'react-use';
@@ -18,14 +18,32 @@ interface PriceProps {
   priceTo?: number;
 }
 
+interface QueryFilters extends PriceProps {
+  pizzaTypes: string;
+  sizes: string;
+  ingredients: string;
+}
+
 export const Filters: React.FC<Props> = ({ className }) => {
   const router = useRouter();
+  const searchParams = useSearchParams() as unknown as Map<keyof QueryFilters, string>;
 
-  const { ingredients, loading, onAddIngredients, selectedIngredients } = useFilterIngredients();
-  const [prices, setPrices] = React.useState<PriceProps>({});
+  console.log(searchParams);
 
-  const [selectedPizzaTypes, { toggle: onAddPizzaTypes }] = useSet<string>(new Set([]));
-  const [selectedSizes, { toggle: onAddSizes }] = useSet<string>(new Set([]));
+  const { ingredients, loading, onAddIngredients, selectedIngredients } = useFilterIngredients(
+    searchParams.get('ingredients')?.split(',')
+  );
+  const [prices, setPrices] = React.useState<PriceProps>({
+    priceFrom: Number(searchParams.get('priceFrom')) || undefined,
+    priceTo: Number(searchParams.get('priceTo')) || undefined,
+  });
+
+  const [selectedPizzaTypes, { toggle: onAddPizzaTypes }] = useSet<string>(
+    new Set(searchParams.get('pizzaTypes')?.split(',') || [])
+  );
+  const [selectedSizes, { toggle: onAddSizes }] = useSet<string>(
+    new Set(searchParams.get('sizes')?.split(',') || [])
+  );
 
   const items = ingredients.map((ingredient) => ({
     text: ingredient.name,
