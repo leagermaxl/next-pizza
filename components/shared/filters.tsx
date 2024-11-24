@@ -1,4 +1,6 @@
 'use client';
+import { useRouter } from 'next/navigation';
+import QueryString from 'qs';
 import React from 'react';
 import { useSet } from 'react-use';
 
@@ -12,13 +14,15 @@ interface Props {
 }
 
 interface PriceProps {
-  priceFrom: number;
-  priceTo: number;
+  priceFrom?: number;
+  priceTo?: number;
 }
 
 export const Filters: React.FC<Props> = ({ className }) => {
+  const router = useRouter();
+
   const { ingredients, loading, onAddIngredients, selectedIngredients } = useFilterIngredients();
-  const [prices, setPrices] = React.useState<PriceProps>({ priceFrom: 0, priceTo: 3000 });
+  const [prices, setPrices] = React.useState<PriceProps>({});
 
   const [selectedPizzaTypes, { toggle: onAddPizzaTypes }] = useSet<string>(new Set([]));
   const [selectedSizes, { toggle: onAddSizes }] = useSet<string>(new Set([]));
@@ -31,6 +35,19 @@ export const Filters: React.FC<Props> = ({ className }) => {
   const updatePrices = (name: keyof PriceProps, value: number) => {
     setPrices((prev) => ({ ...prev, [name]: value }));
   };
+
+  React.useEffect(() => {
+    const filters = {
+      ...prices,
+      pizzaTypes: Array.from(selectedPizzaTypes),
+      sizes: Array.from(selectedSizes),
+      ingredients: Array.from(selectedIngredients),
+    };
+
+    const query = QueryString.stringify(filters, { arrayFormat: 'comma' });
+
+    router.push(`?${query}`, { scroll: false });
+  }, [prices, selectedIngredients, selectedPizzaTypes, selectedSizes, router]);
 
   return (
     <div className={cn(className)}>
@@ -68,8 +85,7 @@ export const Filters: React.FC<Props> = ({ className }) => {
             type='number'
             placeholder='0'
             min={0}
-            max={2999}
-            defaultValue={0}
+            max={999}
             value={String(prices.priceFrom)}
             onChange={(e) => updatePrices('priceFrom', Number(e.target.value))}
           />
@@ -77,16 +93,16 @@ export const Filters: React.FC<Props> = ({ className }) => {
             type='number'
             placeholder='3000'
             min={10}
-            max={3000}
+            max={1000}
             value={String(prices.priceTo)}
             onChange={(e) => updatePrices('priceTo', Number(e.target.value))}
           />
         </div>
         <RangeSlider
           min={0}
-          max={3000}
+          max={1000}
           step={10}
-          value={[prices.priceFrom, prices.priceTo]}
+          value={[prices.priceFrom || 0, prices.priceTo || 1000]}
           onValueChange={([priceFrom, priceTo]) => setPrices({ priceFrom, priceTo })}
         />
       </div>
