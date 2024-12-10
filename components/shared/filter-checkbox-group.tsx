@@ -1,20 +1,24 @@
 'use client';
-import { cn } from '@/lib/utils';
 import React from 'react';
-import { FilterCheckbox } from '.';
-import { Input } from '../ui';
-import { FilterCheckboxProps } from './filter-checkbox';
+
+import { FilterCheckbox } from '@/components/shared';
+import { FilterCheckboxProps } from '@/components/shared/filter-checkbox';
+import { Input, Skeleton } from '@/components/ui';
+import { cn } from '@/lib/utils';
 
 type Item = FilterCheckboxProps;
 
 interface Props {
   title: string;
   items: Item[];
-  defaultItems: Item[];
-  limit: number;
+  defaultItems?: Item[];
+  limit?: number;
   searchItemPlaceholder?: string;
-  onChange?: (values: string) => void;
+  onClickCheckbox?: (id: string) => void;
   defaultValue?: string[];
+  loading?: boolean;
+  selected?: Set<string>;
+  name?: string;
   className?: string;
 }
 
@@ -24,9 +28,12 @@ export const FilterCheckboxGroup: React.FC<Props> = ({
   defaultItems,
   limit = 5,
   searchItemPlaceholder = 'Поиск...',
-  // onChange,
-  // defaultValue,
+  onClickCheckbox,
+  defaultValue,
   className,
+  loading,
+  selected,
+  name,
 }) => {
   const [showAll, setShowAll] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState('');
@@ -35,11 +42,23 @@ export const FilterCheckboxGroup: React.FC<Props> = ({
     ? items.filter((item) =>
         item.text.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase())
       )
-    : defaultItems.slice(0, limit);
+    : (defaultItems || items).slice(0, limit);
 
   const onCheckedChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value);
   };
+
+  if (loading) {
+    return (
+      <div className={cn('', className)}>
+        <p className='font-bold text-sm my-4'>{title}</p>
+        {[...Array(limit)].map((_, index) => (
+          <Skeleton key={index} className='mb-4 h-6 w-full bg-gray-100' />
+        ))}
+        <Skeleton className='mb-4 h-6 w-28 bg-gray-100' />
+      </div>
+    );
+  }
 
   return (
     <div className={cn('', className)}>
@@ -62,8 +81,9 @@ export const FilterCheckboxGroup: React.FC<Props> = ({
             text={item.text}
             value={String(item.value)}
             endAdornment={item.endAdornment}
-            checked={false}
-            onCheckedChange={(ids) => console.log(ids)}
+            checked={selected?.has(item.value)}
+            onCheckedChange={() => onClickCheckbox?.(item.value)}
+            name={name}
           />
         ))}
       </div>
